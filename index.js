@@ -7,7 +7,13 @@ const typeDefs = require('./graphql/typeDef');
 const resolvers = require('./graphql/resolvers');
 
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({ 
+    typeDefs, 
+    resolvers,
+    context: ({req}) => ({
+        authScope: req.headers.authorization
+      })
+});
 
 const app = express();
 server.applyMiddleware({ app });
