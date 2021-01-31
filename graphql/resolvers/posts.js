@@ -9,5 +9,14 @@ module.exports = {
                 throw new error(err)
             }
         },
+
+        getPost: async (_,{postId}) => {
+            try { 
+                const post = await PostModel.findById(postId);
+                return post;
+            } catch (err) {
+                throw new error(err);
+            }
+        }
     },
 }
