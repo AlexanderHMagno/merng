@@ -1,4 +1,4 @@
-const {UserInputError} = require ("apollo-server");
+const {UserInputError, ForbiddenError} = require ("apollo-server");
 
 const PostModel = require ('../../mongo/models/posts');
 const {UserAuthorization} = require('../../util/authFile')
@@ -8,9 +8,9 @@ module.exports = {
     Query: {
         getPosts: async () => {
             try {
-                return await PostModel.find();
+                return await PostModel.find().sort({createdAt: -1});
             } catch (err) {
-                throw new error(err)
+                throw new Error(err)
             }
         },
 
@@ -19,7 +19,7 @@ module.exports = {
                 const post = await PostModel.findById(postId);
                 return post;
             } catch (err) {
-                throw new error(err);
+                throw new Error(err);
             }
         }
     },
@@ -46,6 +46,33 @@ module.exports = {
                     errors
                 })
             }
+        },
+
+        deletePost : async (_, {postId}, context) => {
+            const user = UserAuthorization(context.authScope); 
+            // find the post
+
+            try {                
+                const post = await PostModel.findById(postId);
+
+                if (post) {
+                    // Check the user is trying to delete has auth
+                    if (post.user == user.id) {
+                        const deleted = await post.delete();
+                        if (deleted) {
+                            return 'Post has been removed';
+                        }   
+                    } else {
+                        throw new ForbiddenError ('User doesnt have rights to remove this post')
+                    }
+                    // delete the post
+                } else {
+                    throw new Error ("Post Not Found")
+                }
+            } catch (err) {
+                throw new Error (err);
+            }
+            
         }
     }
 }
