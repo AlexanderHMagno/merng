@@ -44,3 +44,17 @@ module.exports.AuthUserInput = (username, password) => {
         valid: Object.keys(errors).length < 1
     }
 }
+
+module.exports.validatePostBody = (body) => {
+
+    let errors = {};
+
+    if (!body.trim()) {
+        errors.message = "Please, Add a valid message";
+    }
+
+    return {
+        errors,
+        valid: Object.keys(errors).length < 1
+    }
+}
