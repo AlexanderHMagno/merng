@@ -1,4 +1,4 @@
-const {UserInputError} = require('apollo-server')
+const {UserInputError, AuthenticationError} = require('apollo-server')
 
 const PostModel = require('../../mongo/models/posts');
 const {validatePostBody} = require('../../util/validators');
@@ -48,14 +48,19 @@ module.exports = {
             //find comment
 
             try {
-                const comment = await PostModel.findOne({'$and': [{"_id": postId}, { "comments._id":  commentId} ]})
+                const post = await PostModel.findOne({'$and': [{"_id": postId}, { "comments._id":  commentId} ]})
         
-                if (comment) {
+                if (post) {
                     //delete comment if is the same user 
+                    const index = post.comments.findIndex(x => x._id == commentId);
 
-                    // TODO:
-                    const Post = await PostModel.updateOne({ "_id": postId }, { "$pull": { "comments": {"_id":  commentId} }});
-                    return Post
+                    if (post.comments[index].user = user.id) {
+                        await PostModel.updateOne({ "_id": postId }, { "$pull": { "comments": {"_id":  commentId} }});
+                        return post.comments[index];    
+                    } else {
+                        throw new AuthenticationError("User not allowed to perform this operation");
+                    }
+                        
                 }
             } catch (err) {
                 throw new  UserInputError ("Comment not found", err)
