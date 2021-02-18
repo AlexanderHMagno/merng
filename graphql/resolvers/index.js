@@ -7,6 +7,11 @@ const likesResolvers = require('./likes');
 //Resolver are the functions that return the data that we need to fetch
 
 module.exports = {
+    //Modifiers! 
+    Post : {
+        countsComments : (parent) => parent.comments.length,
+        countsLikes : (parent) => parent.likes.length,
+    },
     Query : {
         ...postsResolvers.Query,
     }, 
