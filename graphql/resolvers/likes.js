@@ -13,7 +13,10 @@ module.exports = {
                 const Post = await PostModel.findById(postId);
                 if (Post) {
                     let updatedPost;
-                    const found = await PostModel.findOne({'$and': [{"_id": postId}, { "likes.username":  user.id} ]})
+                    // two different ways the second one is slower but its not sending a new Request to Mongo... 
+                    // Perfomance vs Budget??
+                    // const found = await PostModel.findOne({'$and': [{"_id": postId}, { "likes.username":  user.id} ]})
+                    const found = Post.likes.find(like => like.username === user.id);
                     
                     if (found) {
                         updatedPost =  await PostModel.findOneAndUpdate(
