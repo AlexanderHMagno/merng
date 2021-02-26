@@ -6,3 +6,14 @@
     
 
 }
+
+.loginForm {
+        max-width: 400px !important;
+        margin: auto;
+        
+}
+
+.loginTitle {
+    text-align: center;
+    margin: 20px;
+}
