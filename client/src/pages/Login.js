@@ -36,7 +36,7 @@ const Login = (props) => {
             <Form size="mini" onSubmit={handleSubmit} className = {loading? 'loading':''}> 
                 <Form.Input fluid name="username" label='Username or Email' placeholder='Username' type="text" onChange={onChange}  />
                 <Form.Input fluid name="password" label='Password' placeholder='Password' type="password" onChange={onChange} error={ errors.general ? {  content: 'The user name or password is incorrect' , pointing: 'above' } :false} />
-                <Button type="submit" primary fluid>
+                <Button type="submit" color='teal' fluid>
                     Login
                 </Button>
             </Form>

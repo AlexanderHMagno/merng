@@ -39,7 +39,7 @@ const Register = (props) => {
                 <Form.Input fluid name="email" label='Email' placeholder='Email' type="email" onChange={onChange} error={ errors.email ? {  content: errors.email , pointing: 'above' } :false} />
                 <Form.Input fluid name="password" label='Password' placeholder='Password' type="password" onChange={onChange} error={ errors.password ? {  content: errors.password, pointing: 'above' } :false} />
                 <Form.Input fluid name="confirmPassword" label='Confirm Password' placeholder='Confirm Password' type="password" onChange={onChange} error={ errors.password ? {  content: errors.password, pointing: 'above' } :false} />
-                <Button type="submit" primary fluid>
+                <Button type="submit" color='teal' fluid>
                     Register
                 </Button>
             </Form>
