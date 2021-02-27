@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu } from 'semantic-ui-react';
+import { Menu , Image} from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 
 const Menubar = () => {
@@ -12,8 +12,10 @@ const Menubar = () => {
     return (
         
         <Menu pointing secondary size="massive" color="teal">
+            
             <Menu.Item
             name='Home'
+            icon ={<Image  size="mini" src='/images/cv.png' wrapped ui={true} />}
             active={activeItem === 'Home'}
             onClick={handleItemClick}
             as={Link}
