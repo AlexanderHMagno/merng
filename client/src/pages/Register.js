@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext} from 'react';
 import {Form, Button,Image} from 'semantic-ui-react';
 import {gql, useMutation} from '@apollo/client';
 
 import {useForm} from '../util/hooks';
+import {AuthContext} from '../context/AuthContext';
 
 const Register = (props) => {
     const [errors, setErrors] = useState({});
@@ -13,10 +14,10 @@ const Register = (props) => {
         confirmPassword: '',
     }
     );
-
+    const containerContext = useContext(AuthContext);
     const [createUser, {loading}] = useMutation(REGISTER_MUTATION, {
-        update(proxy, result) {
-            //TODO: do something with the result including the token
+        update(proxy, {data:authentication}) {
+            containerContext.logIn(authentication);
             props.history.push('./');
         },
         onError(err) {
