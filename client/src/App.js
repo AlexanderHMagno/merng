@@ -4,7 +4,9 @@ import './App.css';
 
 //helpers
 import MenuNav from './components/navbar';
-import { Container } from 'semantic-ui-react'
+import { Container } from 'semantic-ui-react';
+import {AuthProvider} from './context/AuthContext';
+import AuthRouter from './security/AuthRouter';
 
 //pages 
 import Home from './pages/Home';
@@ -13,16 +15,18 @@ import Register from './pages/Register';
 
 function App() {
   return (
-    <Router>
-      <Container>
-        <MenuNav/>   
-        <Switch>   
-        <Route exact path="/login" component={Login}/>
-        <Route exact path="/register" component={Register}/>
-        <Route path="/" component={Home}/>
-        </Switch>
-      </Container>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Container>
+          <MenuNav/>   
+          <Switch>   
+          <AuthRouter exact path="/login" component={Login}/>
+          <AuthRouter exact path="/register" component={Register}/>
+          <Route path="/" component={Home}/>
+          </Switch>
+        </Container>
+      </Router>
+      </AuthProvider>
   );
 }
 
