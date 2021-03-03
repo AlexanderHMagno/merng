@@ -25,7 +25,7 @@ const LikeButton = ({post:{id:postId, countsLikes,likes}, userLogged}) => {
         toggleMutationLike()
     }
     return (
-        <Button as={userLogged?'div': Link} to={'/login'} labelPosition='right' onClick={toggleLike}>
+        <Button as={userLogged?'div': Link} to={'/login'} labelPosition='right' onClick={userLogged? toggleLike : null}>
             <Button color='teal' basic={!like}>
                 <Icon name='like' />
             </Button>
