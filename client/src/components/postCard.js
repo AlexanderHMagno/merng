@@ -4,10 +4,10 @@ import moment from 'moment';
 import {Link} from 'react-router-dom';
 
 import {AuthContext} from '../context/AuthContext';
+import LikeButton from '../components/likeButton';
 
-function PostCard ({post:{id,body,createdAt, username, user, countsComments,countsLikes, comments}}) {
+function PostCard ({post:{id,body,createdAt, username, user, countsComments,countsLikes, comments, likes}}) {
     const {user:userLogged} = useContext(AuthContext);
-    const toggleLike = () => console.log("Like");
     const DisplayCommments = () => console.log("comments");
     const removePost =  () => console.log("Removing Post");
 
@@ -26,14 +26,7 @@ function PostCard ({post:{id,body,createdAt, username, user, countsComments,coun
                 </Card.Description>
             </Card.Content>
             <Card.Content extra>
-                <Button as='div' labelPosition='right' onClick={toggleLike}>
-                    <Button color='teal' basic>
-                        <Icon name='like' />
-                    </Button>
-                    <Label  basic color='teal' pointing='left'>
-                        {countsLikes}
-                    </Label>
-                </Button>
+                <LikeButton post={{id, countsLikes, likes}} userLogged={userLogged}/>
                 <Button as={Link} to ={`/post/${id}`} labelPosition='right' onClick={DisplayCommments}>
                     <Button color='blue' basic>
                         <Icon name='comments' />

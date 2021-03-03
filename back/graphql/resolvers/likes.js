@@ -1,3 +1,5 @@
+const {UserInputError} = require ("apollo-server");
+
 const PostModel = require('../../mongo/models/posts');
 const {UserAuthorization} = require('../../util/authFile');
 

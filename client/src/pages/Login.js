@@ -3,7 +3,7 @@ import {Form, Button, Image} from 'semantic-ui-react';
 import {gql, useMutation} from '@apollo/client';
 
 import {useForm} from '../util/hooks';
-import {AuthProvider, AuthContext} from '../context/AuthContext';
+import {AuthContext} from '../context/AuthContext';
 
 const Login = (props) => {
     const [errors, setErrors] = useState({});
