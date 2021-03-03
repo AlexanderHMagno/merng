@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { useState } from 'react';
 import {Form, Button, TextArea} from 'semantic-ui-react';
 
 import {gql, useMutation} from '@apollo/client';
@@ -7,6 +7,7 @@ import {GET_POSTS} from '../graphql/queries';
 
 const FormPost = () => {
     const {handleSubmit,onChange, values} = useForm(createPostCallback,{body: ""});
+    const [error,setErrors] = useState({});
     const [addNewPost, { loading }] = useMutation(ADDPOSTMUTATION, {
         update(proxy, result) {
 
@@ -20,19 +21,22 @@ const FormPost = () => {
             values.body = "";
         },
         onError(err) {
-            console.log(err);
-            // setErrors(err.graphQLErrors[0].extensions.errors);
+            setErrors(err.graphQLErrors[0].extensions.errors);
         },
         variables : values
     });
 
-
+    const removeAlerts= (event) => {
+        setErrors({});
+        onChange(event);
+    } 
     function createPostCallback  () {
         addNewPost();
     }
 
     return (
         <Form onSubmit={handleSubmit}>
+            <h4>Post Something new</h4>
           <Form.Field
             control={TextArea}
             label=''
@@ -40,7 +44,8 @@ const FormPost = () => {
             size="massive"
             value ={values.body}
             name="body"
-            onChange={onChange}
+            onChange={removeAlerts}
+            error={ error.message ? {  content: error.message , pointing: 'below' } :false}
           />
           <Button color="teal" type="submit" fluid>
               Add Post
