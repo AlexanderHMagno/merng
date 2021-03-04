@@ -1,12 +1,16 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { Button, Card, Image, Icon, Label} from 'semantic-ui-react';
 import moment from 'moment';
 import {Link} from 'react-router-dom';
 
-function PostCard ({post:{id,body,createdAt, username,countsComments,countsLikes, comments}}) {
-    
-    const toggleLike = () => console.log("Like");
+import {AuthContext} from '../context/AuthContext';
+import LikeButton from '../components/likeButton';
+
+function PostCard ({post:{id,body,createdAt, username, user, countsComments,countsLikes, comments, likes}}) {
+    const {user:userLogged} = useContext(AuthContext);
     const DisplayCommments = () => console.log("comments");
+    const removePost =  () => console.log("Removing Post");
+
     return (
         <Card fluid style={{marginBottom: 20}}>
             <Card.Content>
@@ -22,15 +26,8 @@ function PostCard ({post:{id,body,createdAt, username,countsComments,countsLikes
                 </Card.Description>
             </Card.Content>
             <Card.Content extra>
-                <Button as='div' labelPosition='right' onClick={toggleLike}>
-                    <Button color='teal' basic>
-                        <Icon name='like' />
-                    </Button>
-                    <Label  basic color='teal' pointing='left'>
-                        {countsLikes}
-                    </Label>
-                </Button>
-                <Button as='div' labelPosition='right' onClick={DisplayCommments}>
+                <LikeButton post={{id, countsLikes, likes}} userLogged={userLogged}/>
+                <Button as={Link} to ={`/post/${id}`} labelPosition='right' onClick={DisplayCommments}>
                     <Button color='blue' basic>
                         <Icon name='comments' />
                     </Button>
@@ -39,6 +36,7 @@ function PostCard ({post:{id,body,createdAt, username,countsComments,countsLikes
                     </Label>
                 </Button>
 
+                {userLogged && (user === userLogged.id ) && (<Button icon="delete" circular color="red"  floated="right" size="mini" onClick={removePost}/>)}
             </Card.Content>
         </Card>
     )
