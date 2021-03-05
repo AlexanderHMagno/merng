@@ -8,7 +8,6 @@ import LikeButton from '../components/likeButton';
 
 function PostCard ({post:{id,body,createdAt, username, user, countsComments,countsLikes, comments, likes}}) {
     const {user:userLogged} = useContext(AuthContext);
-    const DisplayCommments = () => console.log("comments");
     const removePost =  () => console.log("Removing Post");
 
     return (
@@ -27,7 +26,7 @@ function PostCard ({post:{id,body,createdAt, username, user, countsComments,coun
             </Card.Content>
             <Card.Content extra>
                 <LikeButton post={{id, countsLikes, likes}} userLogged={userLogged}/>
-                <Button as={Link} to ={`/post/${id}`} labelPosition='right' onClick={DisplayCommments}>
+                <Button as={Link} to ={userLogged? `/post/${id}` : '/login'} labelPosition='right'>
                     <Button color='blue' basic>
                         <Icon name='comments' />
                     </Button>
