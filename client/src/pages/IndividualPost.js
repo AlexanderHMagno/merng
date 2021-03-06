@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom';
 import {AuthContext} from '../context/AuthContext';
 import Loader from '../util/loader';
 import LikeButton from '../components/likeButton';
-
+import RemoveButton from '../components/removeButton';
 
 const IndividualPost = (props) => {
 
@@ -23,6 +23,7 @@ const IndividualPost = (props) => {
     if (!data) props.history.push('/'); //If post dont exits redirect to home
     const {body, countsComments, countsLikes,likes, username, createdAt, id , user:owner} = data.getPost;
 
+    const deletePostCallback = () => props.history.push('/');
 return  (
     <Grid className="mt-20">
         <Grid.Column width={4}>
@@ -35,7 +36,7 @@ return  (
                     </Card.Meta>
                     <Divider horizontal></Divider>
                     <Card.Content>
-                    {user && (owner === user.id ) && (<Button color="red"  fluid size="mini" >Delete Post</Button>)}
+                    {user && (owner === user.id ) && (<RemoveButton postId={postId} fluid size="mini" callback={deletePostCallback}>Delete Post</RemoveButton>)}
                     <Button className="mt-20" as={Link} to="/" color="teal"  fluid size="mini" >More Posts</Button>
                     </Card.Content>
                 </Card.Content>

@@ -20,6 +20,13 @@ const setAuthorizationLink = setContext((request, previousContext) => {
     }
   }
 
+
+  //If no token lets go to login
+  if (!token) {
+    console.log({token}, 'this is apolloProvider');
+    window.history.pushState({},'','/login');
+  }
+
   const authorization = token? `Bearer ${token}` : '';
   return {
     headers: {authorization}

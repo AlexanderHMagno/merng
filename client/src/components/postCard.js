@@ -5,11 +5,10 @@ import {Link} from 'react-router-dom';
 
 import {AuthContext} from '../context/AuthContext';
 import LikeButton from '../components/likeButton';
+import RemoveButton from '../components/removeButton';
 
 function PostCard ({post:{id,body,createdAt, username, user, countsComments,countsLikes, comments, likes}}) {
     const {user:userLogged} = useContext(AuthContext);
-    const removePost =  () => console.log("Removing Post");
-
     return (
         <Card fluid style={{marginBottom: 20}}>
             <Card.Content>
@@ -35,7 +34,7 @@ function PostCard ({post:{id,body,createdAt, username, user, countsComments,coun
                     </Label>
                 </Button>
 
-                {userLogged && (user === userLogged.id ) && (<Button icon="delete" circular color="red"  floated="right" size="mini" onClick={removePost}/>)}
+                {userLogged && (user === userLogged.id ) && (<RemoveButton postId={id} icon="delete" circular floated="right" size="mini" />)}
             </Card.Content>
         </Card>
     )
