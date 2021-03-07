@@ -15,7 +15,7 @@ const RemoveButton = ({postId,callback, ...rest},  ) =>{
             if (callback) callback();
         } ,
         onError (e) {
-          console.log(e)  
+            window.location.reload();
         },
         variables : {
             postId
