@@ -18,6 +18,9 @@ const LikeButton = ({post:{id:postId, countsLikes,likes}, userLogged}) => {
     },[likes,userLogged])
 
     const [toggleMutationLike] = useMutation(TOGGLELIKE, {
+        onError (errr) {
+            
+        },
         variables: {postId}
     });
 
