@@ -3,7 +3,6 @@ import App from './App';
 import { ApolloClient, InMemoryCache,ApolloProvider, createHttpLink } from '@apollo/client';
 import { setContext } from "apollo-link-context";
 
-import jwt_decode from "jwt-decode";
 
 
 const httpLink = createHttpLink({ uri: "http://localhost:4000/graphql" });
@@ -12,24 +11,9 @@ const httpLink = createHttpLink({ uri: "http://localhost:4000/graphql" });
 const setAuthorizationLink = setContext((request, previousContext) => {
 
   let token = localStorage.getItem("jwtToken");
-  if (token) {
-    let expireDate = jwt_decode(token);
-    if (Date.now() >= expireDate.exp * 1000) {
-      localStorage.removeItem("jwtToken");
-      token = null;
-    }
-  }
-
-
-  //If no token lets go to login
-  if (!token) {
-    console.log({token}, 'this is apolloProvider');
-    window.history.pushState({},'','/login');
-  }
-
   const authorization = token? `Bearer ${token}` : '';
   return {
-    headers: {authorization}
+      headers: {authorization}
   }
 });
 

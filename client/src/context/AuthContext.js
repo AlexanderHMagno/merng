@@ -12,7 +12,14 @@ let ActiveUser = {user: null};
 //Check if we have an active user or not
 if (localStorage.getItem('jwtToken')) {
     const jwtToken = jwt_decode(localStorage.getItem('jwtToken'));
-    ActiveUser = {user : jwtToken};
+   
+    if (jwtToken) {
+        if (Date.now() >= jwtToken.exp * 1000) {
+          localStorage.removeItem("jwtToken");
+        } else {
+            ActiveUser.user =  jwtToken;
+        }
+    }
 }
 
 const AuthContext = createContext({
@@ -31,6 +38,8 @@ const AuthReducer = (initialstate, action) => {
             break;
         case "LOGOUT":
             initialstate = {...initialstate, user: null};
+            break;
+        default:
             break;
     }
     return initialstate;
