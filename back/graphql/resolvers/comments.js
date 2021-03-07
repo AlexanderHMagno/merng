@@ -29,7 +29,7 @@ module.exports = {
                         // insert comment
                         const updatedPost = await PostModel.findOneAndUpdate({'_id':postId}, {$push: {
                             comments: payload
-                        }},{"useFindAndModify":false})
+                        }},{"useFindAndModify":false, new : true})
                         
                         return updatedPost;
                     }
