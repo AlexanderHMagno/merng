@@ -9,7 +9,7 @@ import {AuthContext} from '../context/AuthContext';
 import {GET_POSTS} from '../graphql/queries';
 
 const HOME = () => {
-    const {loading, error, data } = useQuery(GET_POSTS);
+    const {loading, data } = useQuery(GET_POSTS);
     const {user} = useContext(AuthContext);
     if (loading) return <Loader/>;
     const Posts = data.getPosts;

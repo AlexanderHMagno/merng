@@ -12,6 +12,7 @@ import AuthRouter from './security/AuthRouter';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import IndividualPost from './pages/IndividualPost';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Switch>   
           <AuthRouter exact path="/login" component={Login}/>
           <AuthRouter exact path="/register" component={Register}/>
+          <Route exact path="/post/:postId" component={IndividualPost}/>
           <Route path="/" component={Home}/>
           </Switch>
         </Container>
