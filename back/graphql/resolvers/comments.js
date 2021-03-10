@@ -49,14 +49,13 @@ module.exports = {
 
             try {
                 const post = await PostModel.findOne({'$and': [{"_id": postId}, { "comments._id":  commentId} ]})
-        
                 if (post) {
                     //delete comment if is the same user 
                     const index = post.comments.findIndex(x => x._id == commentId);
 
                     if (post.comments[index].user = user.id) {
-                        await PostModel.updateOne({ "_id": postId }, { "$pull": { "comments": {"_id":  commentId} }});
-                        return post.comments[index];    
+                        const updatedPost = await PostModel.findOneAndUpdate({ "_id": postId }, { "$pull": { "comments": {"_id":  commentId} }}, {"useFindAndModify":false, new : true});
+                        return updatedPost;
                     } else {
                         throw new AuthenticationError("User not allowed to perform this operation");
                     }

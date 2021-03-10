@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {gql, useQuery} from '@apollo/client';
-import {Grid, Image, Card, Icon, Header,Button, Label, Divider, Segment,Feed} from 'semantic-ui-react';
+import {Grid, Image, Card, Icon, Header,Button, Label, Divider, Segment,Feed, Dropdown} from 'semantic-ui-react';
 import Moment from 'moment';
 import {Link} from 'react-router-dom';
 
@@ -14,11 +14,15 @@ const IndividualPost = (props) => {
 
     const {user} = useContext(AuthContext);
     const postId = props.match.params.postId;
-    const {loading, error, data} = useQuery(GETPOST, {
+    const {loading, data} = useQuery(GETPOST, {
         variables : {
             postId
         }
     })
+
+    const RemoveComment  = (props) => {
+        console.log({props});
+    }
 
     if (loading) return <Loader/>
     if (!data) props.history.push('/'); //If post dont exits redirect to home
@@ -84,15 +88,29 @@ return  (
 
                         <Feed key={comment.id}>
                             <Feed.Event>
-                            <Feed.Label image='https://react.semantic-ui.com/images/avatar/small/elliot.jpg' />
+                            <Feed.Label image='https://react.semantic-ui.com/images/avatar/small/elliot.jpg' />    
                             <Feed.Content>
-                                <Feed.Date content={Moment(comments.createdAt).fromNow()} />
+                                <Feed.Date content={Moment(comment.createdAt).fromNow()} />
                                 <Feed.Summary>
                                     {comment.body}
                                 </Feed.Summary>
                             </Feed.Content>
+                            { (comment.user === user.id ) && 
+                                <Dropdown
+                                    icon='bars'
+                                    onChange = {(...props)=> RemoveComment(props)}
+                                >
+                                    <Dropdown.Menu>
+                                    <Dropdown.Item>
+                                        <RemoveButton postId={postId} commentId={comment.id} placeholder={true}>  
+                                        <Icon name='attention'/> Delete Post
+                                        </RemoveButton>
+                                    </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            }
                             </Feed.Event>
-                            <Divider section content="-" horizontal/>
+                            <Divider section />
                         </Feed>
                     ) 
                     : "No comments on this post"
