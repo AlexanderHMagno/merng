@@ -65,6 +65,7 @@ const DELETECOMMENT = gql`
     mutation deleteComment ($postId: ID!, $commentId: ID!) {
         deleteComment(postId:$postId, commentId:$commentId) {
             id
+            countsComments
             comments {
                 id
             }
