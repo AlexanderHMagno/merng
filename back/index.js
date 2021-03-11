@@ -6,7 +6,7 @@ const {MONGODB} = require('./config');
 const typeDefs = require('./graphql/typeDef');
 const resolvers = require('./graphql/resolvers');
 
-
+const port = process.env.port || 4000;
 const server = new ApolloServer({ 
     typeDefs, 
     resolvers,
@@ -23,7 +23,8 @@ mongoose
         useNewUrlParser:true,
         useUnifiedTopology: true
     })
-    .then(() => app.listen({ port: 4000 }, () => 
-        console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`))
-    
-);
+    .then(() => app.listen({ port }, () => 
+        console.log(`🚀 Server ready at http://localhost:${port}${server.graphqlPath}`))
+    ).catch(erro => {
+        console.log(erro)
+    });

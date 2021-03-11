@@ -1,6 +1,6 @@
-import React, { PureComponent, useContext} from 'react';
+import React, {useContext} from 'react';
 import {gql, useQuery} from '@apollo/client';
-import {Grid, Image, Card, Icon, Header,Button, Label, Divider, Form} from 'semantic-ui-react';
+import {Grid, Image, Card, Icon, Header,Button, Label, Divider, Segment,Feed, Dropdown} from 'semantic-ui-react';
 import Moment from 'moment';
 import {Link} from 'react-router-dom';
 
@@ -8,24 +8,31 @@ import {AuthContext} from '../context/AuthContext';
 import Loader from '../util/loader';
 import LikeButton from '../components/likeButton';
 import RemoveButton from '../components/removeButton';
+import CreateComment from '../components/comments/createComments';
 
 const IndividualPost = (props) => {
 
     const {user} = useContext(AuthContext);
     const postId = props.match.params.postId;
-    const {loading, error, data} = useQuery(GETPOST, {
+    const {loading, data} = useQuery(GETPOST, {
         variables : {
             postId
         }
     })
 
+    const RemoveComment  = (props) => {
+        console.log({props});
+    }
+
     if (loading) return <Loader/>
     if (!data) props.history.push('/'); //If post dont exits redirect to home
-    const {body, countsComments, countsLikes,likes, username, createdAt, id , user:owner} = data.getPost;
-
+    const {body, countsComments,comments, countsLikes,likes, username, createdAt, id , user:owner} = data.getPost;
+    const newComments = [...comments].reverse();
+    
     const deletePostCallback = () => props.history.push('/');
 return  (
     <Grid className="mt-20">
+        {/* OWNER */}
         <Grid.Column width={4}>
             <Card>
                 <Image src='https://react.semantic-ui.com/images/avatar/large/molly.png' wrapped ui={false} />
@@ -42,6 +49,8 @@ return  (
                 </Card.Content>
             </Card>    
         </Grid.Column>
+
+        {/* FEEDER */}
         <Grid.Column width={9}>
             <Card fluid>
                 <Card.Content extra>
@@ -69,12 +78,44 @@ return  (
                 <Divider horizontal/>
 
                 <Card.Content extra>
-                <Form>
-                    <Form.TextArea rows="6" placeholder='Any comment?' />
-                    <Form.Button>Add Comment</Form.Button>
-                </Form>
+                    <CreateComment postId={id}/>
                 </Card.Content>
-            </Card>    
+            </Card>
+
+            <Segment>
+                {comments.length? 
+                    newComments.map(comment => 
+
+                        <Feed key={comment.id}>
+                            <Feed.Event>
+                            <Feed.Label image='https://react.semantic-ui.com/images/avatar/small/elliot.jpg' />    
+                            <Feed.Content>
+                                <Feed.Date content={Moment(comment.createdAt).fromNow()} />
+                                <Feed.Summary>
+                                    {comment.body}
+                                </Feed.Summary>
+                            </Feed.Content>
+                            { (comment.user === user.id ) && 
+                                <Dropdown
+                                    icon='bars'
+                                    onChange = {(...props)=> RemoveComment(props)}
+                                >
+                                    <Dropdown.Menu>
+                                    <Dropdown.Item>
+                                        <RemoveButton postId={postId} commentId={comment.id} placeholder={true}>  
+                                        <Icon name='attention'/> Delete Post
+                                        </RemoveButton>
+                                    </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            }
+                            </Feed.Event>
+                            <Divider section />
+                        </Feed>
+                    ) 
+                    : "No comments on this post"
+                }
+            </Segment>
         </Grid.Column>
         <Grid.Column width={3}>
         
@@ -89,10 +130,16 @@ const GETPOST = gql`
         getPost(postId:$postId) {
             username
             body
-            user
+            user 
             id
             countsComments
             countsLikes
+            comments {
+                body
+                createdAt
+                user
+                id
+            }
             likes{
                 username
             }

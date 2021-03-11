@@ -1,37 +1,51 @@
 import React, {useState} from 'react';
 import {gql, useMutation} from '@apollo/client';
-import {Button, Confirm} from 'semantic-ui-react';
+import {Button, Confirm, Header} from 'semantic-ui-react';
 
 import {GET_POSTS} from '../graphql/queries';
 
-const RemoveButton = ({postId,callback, ...rest},  ) =>{
+const RemoveButton = ({postId,commentId,callback,placeholder, ...rest},  ) =>{
     const [confirmModal, setConfirmModal] = useState(false);
-    const [deletePost] = useMutation(DELETEPOST, {
+    const USEDELETEMUTATION = commentId? DELETECOMMENT : DELETEPOST;
+    const [deletePost] = useMutation(USEDELETEMUTATION, {
         update (cache){
             setConfirmModal(false);
-            const POSTCOLLECTION = cache.readQuery({query:GET_POSTS});
-            const newData = {getPosts : POSTCOLLECTION.getPosts.filter( P => P.id !== postId)};
-            cache.writeQuery({query:GET_POSTS, data: newData});
+            if (commentId) {
+                
+            } else {
+                const POSTCOLLECTION = cache.readQuery({query:GET_POSTS});
+                const newData = {getPosts : POSTCOLLECTION.getPosts.filter( P => P.id !== postId)};
+                cache.writeQuery({query:GET_POSTS, data: newData});
+            }
+           
             if (callback) callback();
         } ,
         onError (e) {
             window.location.reload();
         },
         variables : {
-            postId
+            postId,
+            commentId
         }
     })
 
     return (
         <>
-    <Button 
-        {...rest}  
-        color="red" 
-        onClick ={() =>setConfirmModal(true)} 
-    />
+    {placeholder? 
+        (<Header   
+            {...rest}  
+            size="tiny"
+            onClick ={() =>setConfirmModal(true)} 
+        />)
+        :(<Button 
+            {...rest}  
+            color="red" 
+            onClick ={() =>setConfirmModal(true)} 
+        />)
+    }
     <Confirm
           open={confirmModal}
-          content ='Do you really want to remove this Post?'
+          content ={`Do you really want to remove this ${commentId? 'comment': 'post'}?`}
           onCancel={() => setConfirmModal(false)}
           onConfirm={deletePost}
           size ="mini"
@@ -42,12 +56,21 @@ const RemoveButton = ({postId,callback, ...rest},  ) =>{
 }
 
 const DELETEPOST = gql`
-
     mutation deletePost($postId: ID!) {
         deletePost(postId:$postId)
     }
+`;
 
-
+const DELETECOMMENT = gql`
+    mutation deleteComment ($postId: ID!, $commentId: ID!) {
+        deleteComment(postId:$postId, commentId:$commentId) {
+            id
+            countsComments
+            comments {
+                id
+            }
+    }
+}
 `;
 
 
